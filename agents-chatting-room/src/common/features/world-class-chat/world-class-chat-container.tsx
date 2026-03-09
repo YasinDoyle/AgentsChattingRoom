@@ -112,37 +112,6 @@ export const WorldClassChatContainer = forwardRef<
     addPanel,
   } = useSidePanelManager(sidePanelConfigs);
 
-  // 1.5 暴露 openPanel 和 suggestions 管理能力
-  useImperativeHandle(
-    ref,
-    () => ({
-      addMessages,
-      openPanel,
-      openCustomPanel: (
-        key: string,
-        config: SidePanelConfig,
-        props?: unknown,
-      ) => {
-        addPanel(config);
-        openPanel(key, props);
-
-        // 使用 iframe 管理器创建 iframe ID（如果是 HTML 预览面板）
-        if (
-          config.key.includes("html-preview") ||
-          config.key.includes("preview")
-        ) {
-          const iframeId = iframeManager.createIframe(key, "html-preview");
-          return iframeId;
-        }
-
-        return null;
-      },
-      suggestionsManager,
-      iframeManager,
-    }),
-    [openPanel, addPanel, suggestionsManager, iframeManager],
-  );
-
   // 2. Agent & Message
   const { providerConfig, model } = getLLMProviderConfig();
   const agent = new ExperimentalInBrowserAgent({
@@ -194,6 +163,37 @@ export const WorldClassChatContainer = forwardRef<
     defaultContexts: mergedContexts,
     initialMessages,
   });
+
+  // 1.5 暴露 openPanel 和 suggestions 管理能力
+  useImperativeHandle(
+    ref,
+    () => ({
+      addMessages,
+      openPanel,
+      openCustomPanel: (
+        key: string,
+        config: SidePanelConfig,
+        props?: unknown,
+      ) => {
+        addPanel(config);
+        openPanel(key, props);
+
+        // 使用 iframe 管理器创建 iframe ID（如果是 HTML 预览面板）
+        if (
+          config.key.includes("html-preview") ||
+          config.key.includes("preview")
+        ) {
+          const iframeId = iframeManager.createIframe(key, "html-preview");
+          return iframeId;
+        }
+
+        return null;
+      },
+      suggestionsManager,
+      iframeManager,
+    }),
+    [addMessages, openPanel, addPanel, suggestionsManager, iframeManager],
+  );
 
   // 3. Effect
   React.useEffect(() => {

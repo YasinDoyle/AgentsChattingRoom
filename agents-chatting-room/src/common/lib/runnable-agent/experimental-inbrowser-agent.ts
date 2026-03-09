@@ -11,20 +11,22 @@ export class ExperimentalInBrowserAgent implements IAgent {
 
   constructor(config?: Partial<AgentConfig>) {
     this.currentConfig = {
-      apiKey: config?.apiKey || import.meta.env.VITE_OPENAI_API_KEY || "",
+      apiKey: config?.apiKey || process.env.NEXT_PUBLIC_OPENAI_API_KEY || "",
       model:
-        config?.model || import.meta.env.VITE_OPENAI_MODEL || "gpt-3.5-turbo",
+        config?.model ||
+        process.env.NEXT_PUBLIC_OPENAI_MODEL ||
+        "gpt-3.5-turbo",
       temperature: config?.temperature || 0.7,
       maxTokens: config?.maxTokens || 1000,
       baseURL:
         config?.baseURL ||
-        import.meta.env.VITE_OPENAI_API_URL ||
+        process.env.NEXT_PUBLIC_OPENAI_API_URL ||
         "https://api.openai.com/v1",
     };
 
     if (!this.currentConfig.apiKey) {
       throw new Error(
-        "OpenAI API key is required. Please set VITE_OPENAI_API_KEY environment variable.",
+        "OpenAI API key is required. Please set NEXT_PUBLIC_OPENAI_API_KEY environment variable.",
       );
     }
 
