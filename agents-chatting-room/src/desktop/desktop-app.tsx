@@ -8,7 +8,6 @@ import { useAppBootstrap } from "@/core/hooks/use-app-bootstrap";
 import { useViewportHeight } from "@/core/hooks/useViewportHeight";
 import { desktopAgentsExtension } from "@/desktop/features/agents/extensions";
 import { desktopChatExtension } from "@/desktop/features/chat/extensions";
-import { HashRouter } from "react-router-dom";
 import { AuthGate } from "@/common/features/auth/components/auth-gate";
 
 export function DesktopAppInner() {

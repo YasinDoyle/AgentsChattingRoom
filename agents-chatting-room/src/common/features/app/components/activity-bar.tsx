@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { IconRegistry } from "@/common/components/common/icon-registry";
 import { ThemeToggle } from "@/common/components/common/theme";
 import { LanguageToggle } from "@/common/components/common/language";
@@ -25,8 +25,9 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
   const activeId = useActivityBarStore((s) => s.activeId);
   const rawItems = useActivityBarStore((s) => s.items);
   const { status } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const redirectRef = useRef("");
 
   // actions are exposed via manager on presenter (MVP: actions via manager)
@@ -73,13 +74,14 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
   }, [presenter]);
 
   useEffect(() => {
-    redirectRef.current = `${location.pathname}${location.search}`;
-  }, [location.pathname, location.search]);
+    const search = searchParams.toString();
+    redirectRef.current = search ? `${pathname}?${search}` : pathname;
+  }, [pathname, searchParams]);
 
   const handleAuthClick = useCallback(() => {
     const redirect = redirectRef.current || "/chat";
-    navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
-  }, [navigate]);
+    router.push(`/login?redirect=${encodeURIComponent(redirect)}`);
+  }, [router]);
 
   const handleGithubClick = useCallback(() => {
     window.open(
