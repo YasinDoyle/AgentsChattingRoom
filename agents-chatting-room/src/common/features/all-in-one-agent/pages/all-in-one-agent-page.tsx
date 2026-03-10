@@ -6,7 +6,7 @@ import {
 import type { AgentTool } from "@/common/hooks/use-provide-agent-tools";
 import { useProvideAgentTools } from "@/common/hooks/use-provide-agent-tools";
 import { AgentDef } from "@/common/types/agent";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@/core/hooks/use-i18n";
 import { calculatorTool, weatherTool } from "../components/agent-tools";
 import { createClearSuggestionsTool } from "../components/agent-tools/clear-suggestions.tool";
@@ -73,93 +73,69 @@ export function AllInOneAgentPage() {
     [t],
   );
 
-  // 创建 HTML 预览工具
-  const htmlPreviewFromFileTool = useMemo(
-    () =>
-      createHtmlPreviewFromFileTool(
+  // 用 useState + useEffect 创建工具实例，确保所有闭包（包括访问 chatRef.current 的部分）
+  // 都在 useEffect 中生成，而非 render 阶段。这符合 React Compiler 的要求：
+  // ref.current 只能在 effect / 事件处理器中访问，不能在 render 期间访问。
+  const [refDependentTools, setRefDependentTools] = useState<{
+    htmlPreviewFromFile: AgentTool;
+    subscribeIframeMessages: AgentTool;
+    sendMessageToIframe: AgentTool;
+    requestUserChoice: AgentTool;
+    recommendTopics: AgentTool;
+    provideNextSteps: AgentTool;
+    clearSuggestions: AgentTool;
+  } | null>(null);
+
+  useEffect(() => {
+    setRefDependentTools({
+      htmlPreviewFromFile: createHtmlPreviewFromFileTool(
         (key, config, props) =>
-          chatRef.current?.openCustomPanel(key, config, props) || null,
-        () => chatRef.current?.iframeManager || null,
+          chatRef.current?.openCustomPanel(key, config, props) ?? null,
+        () => chatRef.current?.iframeManager ?? null,
       ),
-    [],
-  );
-
-  // 创建 iframe 消息订阅工具
-  const subscribeIframeMessagesTool = useMemo(
-    () =>
-      createSubscribeIframeMessagesTool(
-        () => chatRef.current?.iframeManager || null,
-        () => chatRef.current?.addMessages || null,
+      subscribeIframeMessages: createSubscribeIframeMessagesTool(
+        () => chatRef.current?.iframeManager ?? null,
+        () => chatRef.current?.addMessages ?? null,
       ),
-    [],
-  );
-
-  // 创建 iframe 消息发送工具
-  const sendMessageToIframeTool = useMemo(
-    () =>
-      createSendMessageToIframeTool(
-        () => chatRef.current?.iframeManager || null,
+      sendMessageToIframe: createSendMessageToIframeTool(
+        () => chatRef.current?.iframeManager ?? null,
       ),
-    [],
-  );
-
-  // 创建建议管理工具
-  const requestUserChoiceTool = useMemo(
-    () =>
-      createRequestUserChoiceTool(
-        () => chatRef.current?.suggestionsManager || null,
+      requestUserChoice: createRequestUserChoiceTool(
+        () => chatRef.current?.suggestionsManager ?? null,
       ),
-    [],
-  );
-
-  const recommendTopicsTool = useMemo(
-    () =>
-      createRecommendTopicsTool(
-        () => chatRef.current?.suggestionsManager || null,
+      recommendTopics: createRecommendTopicsTool(
+        () => chatRef.current?.suggestionsManager ?? null,
       ),
-    [],
-  );
-
-  const provideNextStepsTool = useMemo(
-    () =>
-      createProvideNextStepsTool(
-        () => chatRef.current?.suggestionsManager || null,
+      provideNextSteps: createProvideNextStepsTool(
+        () => chatRef.current?.suggestionsManager ?? null,
       ),
-    [],
-  );
-
-  const clearSuggestionsTool = useMemo(
-    () =>
-      createClearSuggestionsTool(
-        () => chatRef.current?.suggestionsManager || null,
+      clearSuggestions: createClearSuggestionsTool(
+        () => chatRef.current?.suggestionsManager ?? null,
       ),
-    [],
-  );
+    });
+    // chatRef is stable (useRef), so this effect runs only once after mount
+  }, []);
 
-  // 基础工具列表
+  // 基础工具列表：静态工具始终可用，依赖 ref 的工具在 mount 后才注入
   const baseTools: AgentTool[] = useMemo(
     () => [
       getCurrentTimeTool,
       weatherTool,
       calculatorTool,
       fileSystemTool,
-      htmlPreviewFromFileTool,
-      subscribeIframeMessagesTool,
-      sendMessageToIframeTool,
-      requestUserChoiceTool,
-      recommendTopicsTool,
-      provideNextStepsTool,
-      clearSuggestionsTool,
+      ...(refDependentTools
+        ? [
+            refDependentTools.htmlPreviewFromFile,
+            refDependentTools.subscribeIframeMessages,
+            refDependentTools.sendMessageToIframe,
+            refDependentTools.requestUserChoice,
+            refDependentTools.recommendTopics,
+            refDependentTools.provideNextSteps,
+            refDependentTools.clearSuggestions,
+          ]
+        : []),
     ],
-    [
-      htmlPreviewFromFileTool,
-      subscribeIframeMessagesTool,
-      sendMessageToIframeTool,
-      requestUserChoiceTool,
-      recommendTopicsTool,
-      provideNextStepsTool,
-      clearSuggestionsTool,
-    ],
+    [refDependentTools],
   );
 
   // 提供工具给 agent

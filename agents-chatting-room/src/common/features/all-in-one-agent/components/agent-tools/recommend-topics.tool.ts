@@ -3,16 +3,23 @@ import type { ToolCall } from "@agent-labs/agent-chat";
 import type { Suggestion } from "@/common/features/chat/components/suggestions/suggestion.types";
 import { i18n } from "@/core/hooks/use-i18n";
 
-export interface ProvideNextStepsParams {
-  context: string;
-  nextSteps: Array<{
+export interface RecommendTopicsParams {
+  context?:
+    | "greeting"
+    | "general"
+    | "learning"
+    | "health"
+    | "work"
+    | "shopping"
+    | "travel";
+  topics: Array<{
     id: string;
     content: string;
     type?: "question" | "action";
   }>;
 }
 
-export function createProvideNextStepsTool(
+export function createRecommendTopicsTool(
   getSuggestionsManager: () => {
     suggestions: Suggestion[];
     setSuggestions: (suggestions: Suggestion[]) => void;
@@ -23,16 +30,25 @@ export function createProvideNextStepsTool(
   } | null,
 ): AgentTool {
   return {
-    name: "provide_next_steps",
-    description: i18n.t("tool.provideNextSteps.description"),
+    name: "recommend_topics",
+    description: i18n.t("tool.recommendTopics.description"),
     parameters: {
       type: "object",
       properties: {
         context: {
           type: "string",
-          description: i18n.t("tool.provideNextSteps.contextDescription"),
+          enum: [
+            "greeting",
+            "general",
+            "learning",
+            "health",
+            "work",
+            "shopping",
+            "travel",
+          ],
+          description: i18n.t("tool.recommendTopics.contextDescription"),
         },
-        nextSteps: {
+        topics: {
           type: "array",
           items: {
             type: "object",
@@ -43,10 +59,10 @@ export function createProvideNextStepsTool(
             },
             required: ["id", "content"],
           },
-          description: i18n.t("tool.provideNextSteps.nextStepsDescription"),
+          description: i18n.t("tool.recommendTopics.topicsDescription"),
         },
       },
-      required: ["context", "nextSteps"],
+      required: ["topics"],
     },
     execute: async (toolCall: ToolCall) => {
       const manager = getSuggestionsManager();
@@ -63,26 +79,26 @@ export function createProvideNextStepsTool(
 
       try {
         const args = JSON.parse(toolCall.function.arguments);
-        const params = args as ProvideNextStepsParams;
-        const { context, nextSteps } = params;
+        const params = args as RecommendTopicsParams;
+        const { context, topics } = params;
 
-        if (!nextSteps || nextSteps.length === 0) {
+        if (!topics || topics.length === 0) {
           return {
             toolCallId: toolCall.id,
             result: {
               success: false,
-              error: "No next steps provided",
+              error: "No topics provided",
             },
             status: "error" as const,
           };
         }
 
         // 转换为 Suggestion 格式
-        const suggestions: Suggestion[] = nextSteps.map((step) => ({
-          id: step.id,
-          type: step.type || "action",
-          actionName: step.content,
-          content: step.content,
+        const suggestions: Suggestion[] = topics.map((topic) => ({
+          id: topic.id,
+          type: topic.type || "action",
+          actionName: topic.content,
+          content: topic.content,
         }));
 
         // 设置建议
@@ -92,9 +108,9 @@ export function createProvideNextStepsTool(
           toolCallId: toolCall.id,
           result: {
             success: true,
-            message: `Successfully provided ${nextSteps.length} next steps`,
+            message: `Successfully recommended ${topics.length} topics`,
             context,
-            nextSteps: suggestions,
+            topics: suggestions,
             currentSuggestions: manager.suggestions,
           },
           status: "success" as const,
@@ -104,7 +120,7 @@ export function createProvideNextStepsTool(
           toolCallId: toolCall.id,
           result: {
             success: false,
-            error: `Failed to provide next steps: ${error instanceof Error ? error.message : String(error)}`,
+            error: `Failed to recommend topics: ${error instanceof Error ? error.message : String(error)}`,
           },
           status: "error" as const,
         };
