@@ -21,7 +21,7 @@ export const AutoResizeTextarea = React.forwardRef<
       if (typeof ref === "function") {
         return textareaRef.current;
       }
-      return (ref as React.RefObject<HTMLTextAreaElement>).current;
+      return (ref as React.RefObject<HTMLTextAreaElement | null>).current;
     }
     return textareaRef.current;
   }, [ref]);

@@ -1,6 +1,6 @@
 import { AgentForm } from "@/common/features/agents/components/forms";
 import { ModernAgentCard } from "@/common/features/agents/components/cards/modern-agent-card";
-import { PageContainer } from "@/common/components/layout/page-container";
+import { PageContainer } from "@/common/components/layouts/page-container";
 import { Badge } from "@/common/components/ui/badge";
 import { Button } from "@/common/components/ui/button";
 import { useAgentForm } from "@/core/hooks/use-agent-form";
