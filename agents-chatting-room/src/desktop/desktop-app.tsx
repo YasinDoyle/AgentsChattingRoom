@@ -5,7 +5,7 @@ import { allInOneAgentExtension } from "@/common/features/all-in-one-agent";
 import { cn } from "@/common/lib/utils";
 import { useSetupApp } from "@/core/hooks/use-setup-app";
 import { useAppBootstrap } from "@/core/hooks/use-app-bootstrap";
-import { useViewportHeight } from "@/core/hooks/useViewportHeight";
+import { useViewportHeight } from "@/core/hooks/use-viewport-height";
 import { desktopAgentsExtension } from "@/desktop/features/agents/extensions";
 import { desktopChatExtension } from "@/desktop/features/chat/extensions";
 import { AuthGate } from "@/common/features/auth/components/auth-gate";
