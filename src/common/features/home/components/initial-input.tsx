@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/common/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";

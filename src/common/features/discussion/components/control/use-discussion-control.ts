@@ -1,3 +1,4 @@
+"use client";
 import { getPresenter } from "@/core/presenter/presenter";
 import { AgentMessage } from "@/common/types/discussion";
 import { useEffect, useState } from "react";

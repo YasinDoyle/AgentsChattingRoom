@@ -1,3 +1,4 @@
+"use client";
 import { Textarea } from "@/common/components/ui/textarea";
 import { cn } from "@/common/lib/utils";
 import React from "react";

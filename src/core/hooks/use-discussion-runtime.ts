@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import type { Snapshot } from "@/core/managers/discussion-control.manager";
 import { getPresenter } from "@/core/presenter/presenter";

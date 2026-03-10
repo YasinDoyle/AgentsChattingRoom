@@ -1,3 +1,4 @@
+"use client";
 import { useWindowSize } from "@/core/hooks/use-window-size";
 import { createContext, ReactNode, useContext, useMemo } from "react";
 

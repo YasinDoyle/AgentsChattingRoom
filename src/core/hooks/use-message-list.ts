@@ -1,3 +1,4 @@
+"use client";
 import { reorganizeMessages } from "@/common/lib/discussion/message-utils";
 import { AgentMessage, MessageWithTools } from "@/common/types/discussion";
 import { useEffect, useRef, useState } from "react";

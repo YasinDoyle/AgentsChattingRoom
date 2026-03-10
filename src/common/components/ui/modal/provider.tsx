@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useState } from "react";
 import {
   Dialog,
@@ -19,7 +20,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   });
 
   const close = useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       prev.options.afterClose?.();
       return { ...prev, isOpen: false };
     });
@@ -32,29 +33,32 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const confirm = useCallback((options: Omit<ModalOptions, 'content'>) => {
-    show({
-      ...options,
-      okText: options.okText ?? '确认',
-      cancelText: options.cancelText ?? '取消',
-    });
-  }, [show]);
+  const confirm = useCallback(
+    (options: Omit<ModalOptions, "content">) => {
+      show({
+        ...options,
+        okText: options.okText ?? "确认",
+        cancelText: options.cancelText ?? "取消",
+      });
+    },
+    [show],
+  );
 
   const handleOk = async () => {
     try {
       await state.options.onOk?.();
-      setState(prev => {
+      setState((prev) => {
         prev.options.afterClose?.();
         return { ...prev, isOpen: false };
       });
     } catch (error) {
-      console.error('Modal onOk error:', error);
+      console.error("Modal onOk error:", error);
     }
   };
 
   const handleCancel = () => {
     state.options.onCancel?.();
-    setState(prev => {
+    setState((prev) => {
       prev.options.afterClose?.();
       return { ...prev, isOpen: false };
     });
@@ -63,13 +67,18 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   return (
     <ModalContext.Provider value={{ show, confirm, close }}>
       {children}
-      <Dialog open={state.isOpen} onOpenChange={open => !open && handleCancel()}>
+      <Dialog
+        open={state.isOpen}
+        onOpenChange={(open) => !open && handleCancel()}
+      >
         <DialogContent className={cn(state.options.className)}>
           {state.options.title && (
             <DialogHeader>
               <DialogTitle>{state.options.title}</DialogTitle>
               {state.options.description && (
-                <DialogDescription>{state.options.description}</DialogDescription>
+                <DialogDescription>
+                  {state.options.description}
+                </DialogDescription>
               )}
             </DialogHeader>
           )}
@@ -79,10 +88,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
           {state.options.showFooter !== false && (
             <DialogFooter>
               <Button variant="outline" onClick={handleCancel}>
-                {state.options.cancelText ?? '取消'}
+                {state.options.cancelText ?? "取消"}
               </Button>
               <Button onClick={handleOk}>
-                {state.options.okText ?? '确认'}
+                {state.options.okText ?? "确认"}
               </Button>
             </DialogFooter>
           )}
@@ -90,4 +99,4 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       </Dialog>
     </ModalContext.Provider>
   );
-} 
+}

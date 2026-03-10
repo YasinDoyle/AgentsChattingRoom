@@ -1,3 +1,4 @@
+"use client";
 import { useAutoScroll } from "@/core/hooks/use-auto-scroll";
 import { cn } from "@/common/lib/utils";
 import {

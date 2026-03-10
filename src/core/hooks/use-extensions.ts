@@ -1,3 +1,4 @@
+"use client";
 import { ExtensionDefinition } from "@cardos/extension";
 import { useEffect, useRef, useState, startTransition } from "react";
 import { extensionManager } from "../extension-manager";

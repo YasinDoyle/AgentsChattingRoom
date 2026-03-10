@@ -7,7 +7,7 @@ import { MessagePreviewDialog } from "./message-preview-dialog";
 // 直接引入预览对话框，避免 Suspense 过渡造成视觉突变
 
 interface MessageCaptureProps {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   className?: string;
 }
 

@@ -1,3 +1,4 @@
+"use client";
 import { AgentForm } from "@/common/features/agents/components/forms";
 import { ModernAgentCard } from "@/common/features/agents/components/cards/modern-agent-card";
 import { PageContainer } from "@/common/components/layouts/page-container";

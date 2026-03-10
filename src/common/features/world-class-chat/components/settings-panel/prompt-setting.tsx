@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useRef } from "react";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/common/lib/utils";

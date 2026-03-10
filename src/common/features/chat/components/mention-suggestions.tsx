@@ -1,3 +1,4 @@
+"use client";
 // Avatar primitives are not used directly here
 import { SmartAvatar } from "@/common/components/ui/smart-avatar";
 import { AgentDef } from "@/common/types/agent";

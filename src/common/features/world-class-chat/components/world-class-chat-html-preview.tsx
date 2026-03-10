@@ -1,3 +1,4 @@
+"use client";
 import { Code2, Eye, X, RefreshCw } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -12,17 +13,17 @@ export interface WorldClassChatHtmlPreviewProps {
   onIframeReady?: (element: HTMLIFrameElement) => void;
 }
 
-export function WorldClassChatHtmlPreview({ 
-  html, 
-  onClose, 
-  onRefresh, 
-  showRefreshButton = false, 
+export function WorldClassChatHtmlPreview({
+  html,
+  onClose,
+  onRefresh,
+  showRefreshButton = false,
   iframeId,
-  onIframeReady 
+  onIframeReady,
 }: WorldClassChatHtmlPreviewProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<'preview' | 'source'>('preview');
+  const [tab, setTab] = useState<"preview" | "source">("preview");
   const [copied, setCopied] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -67,14 +68,14 @@ export function WorldClassChatHtmlPreview({
       <div className="flex items-center justify-between px-6 py-4 border-b border-indigo-100/30 bg-white/40 backdrop-blur-md sticky top-0 z-20">
         <div className="flex items-center gap-2">
           <button
-            className={`flex items-center gap-1 px-3 py-1 rounded-lg font-medium text-sm transition-colors duration-150 ${tab === 'preview' ? 'bg-indigo-50 text-indigo-600 shadow' : 'hover:bg-slate-100 text-slate-500'}`}
-            onClick={() => setTab('preview')}
+            className={`flex items-center gap-1 px-3 py-1 rounded-lg font-medium text-sm transition-colors duration-150 ${tab === "preview" ? "bg-indigo-50 text-indigo-600 shadow" : "hover:bg-slate-100 text-slate-500"}`}
+            onClick={() => setTab("preview")}
           >
             <Eye size={16} className="mr-1" /> 预览
           </button>
           <button
-            className={`flex items-center gap-1 px-3 py-1 rounded-lg font-medium text-sm transition-colors duration-150 ${tab === 'source' ? 'bg-indigo-50 text-indigo-600 shadow' : 'hover:bg-slate-100 text-slate-500'}`}
-            onClick={() => setTab('source')}
+            className={`flex items-center gap-1 px-3 py-1 rounded-lg font-medium text-sm transition-colors duration-150 ${tab === "source" ? "bg-indigo-50 text-indigo-600 shadow" : "hover:bg-slate-100 text-slate-500"}`}
+            onClick={() => setTab("source")}
           >
             <Code2 size={16} className="mr-1" /> 源码
           </button>
@@ -87,7 +88,11 @@ export function WorldClassChatHtmlPreview({
               className="bg-indigo-100 hover:bg-indigo-200 border-none rounded-lg p-2 cursor-pointer shadow transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="刷新文件内容"
             >
-              <RefreshCw size={18} color="#6366f1" className={refreshing ? "animate-spin" : ""} />
+              <RefreshCw
+                size={18}
+                color="#6366f1"
+                className={refreshing ? "animate-spin" : ""}
+              />
             </button>
           )}
           <button
@@ -100,22 +105,24 @@ export function WorldClassChatHtmlPreview({
         </div>
       </div>
       {/* loading 动画 */}
-      {loading && tab === 'preview' && !error && (
+      {loading && tab === "preview" && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-20 h-full ">
           <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-500 rounded-full animate-spin" />
         </div>
       )}
       {/* 错误提示 */}
-      {error && tab === 'preview' && (
+      {error && tab === "preview" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-30 h-full">
-          <div className="text-red-500 font-bold text-lg mb-2">预览加载失败</div>
+          <div className="text-red-500 font-bold text-lg mb-2">
+            预览加载失败
+          </div>
           <div className="text-sm text-gray-500">{error}</div>
         </div>
       )}
       {/* 内容区 */}
       <div className="flex-1 overflow-auto p-6 h-full">
         <div className="rounded-2xl shadow-2xl shadow-indigo-500/10 overflow-hidden bg-white h-full border border-indigo-100/30 flex flex-col">
-          {tab === 'preview' ? (
+          {tab === "preview" ? (
             <iframe
               ref={iframeRef}
               id={finalIframeId}
@@ -125,7 +132,10 @@ export function WorldClassChatHtmlPreview({
               style={{ border: "none", borderRadius: 12 }}
               sandbox="allow-scripts allow-same-origin"
               onLoad={() => setLoading(false)}
-              onError={() => { setLoading(false); setError("HTML 渲染出错"); }}
+              onError={() => {
+                setLoading(false);
+                setError("HTML 渲染出错");
+              }}
             />
           ) : (
             <div className="relative h-full bg-slate-900 min-w-0 max-w-full  overflow-x-auto">
@@ -134,14 +144,25 @@ export function WorldClassChatHtmlPreview({
                 onClick={handleCopy}
                 title="复制源码"
               >
-                {copied ? '已复制' : '复制源码'}
+                {copied ? "已复制" : "复制源码"}
               </button>
               <div className="h-full overflow-auto pt-8 pb-4 px-2 min-w-0 max-w-full overflow-x-auto">
                 <div className=" max-w-full min-w-0">
                   <SyntaxHighlighter
                     language="html"
                     style={oneDark}
-                    customStyle={{ background: "transparent", fontSize: 15, margin: 0, padding: 0, width: '100%', maxWidth: '100%', minWidth: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all', overflowX: 'auto' }}
+                    customStyle={{
+                      background: "transparent",
+                      fontSize: 15,
+                      margin: 0,
+                      padding: 0,
+                      width: "100%",
+                      maxWidth: "100%",
+                      minWidth: 0,
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-all",
+                      overflowX: "auto",
+                    }}
                     wrapLongLines
                     showLineNumbers={false}
                   >
@@ -162,4 +183,4 @@ export function WorldClassChatHtmlPreview({
       `}</style>
     </div>
   );
-} 
+}

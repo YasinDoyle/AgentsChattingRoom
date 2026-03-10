@@ -1,3 +1,4 @@
+"use client";
 import { AgentDef } from "@/common/types/agent";
 import { usePresenter } from "@/core/presenter";
 import { useCallback } from "react";

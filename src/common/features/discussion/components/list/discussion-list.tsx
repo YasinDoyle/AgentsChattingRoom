@@ -1,3 +1,4 @@
+"use client";
 import { useAgents } from "@/core/hooks/use-agents";
 import { useDiscussions } from "@/core/hooks/use-discussions";
 import { cn } from "@/common/lib/utils";

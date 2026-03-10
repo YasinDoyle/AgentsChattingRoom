@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import type { AgentDef } from "@/common/types/agent";
 import type { AgentMessage } from "@/common/types/discussion";

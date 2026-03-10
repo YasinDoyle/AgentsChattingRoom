@@ -1,3 +1,4 @@
+"use client";
 import { ChatArea } from "@/common/features/chat/components/chat-area";
 import { useBreakpointContext } from "@/common/components/common/breakpoint-provider";
 import { DiscussionController } from "@/common/features/discussion/components/control/discussion-controller";

@@ -1,3 +1,4 @@
+"use client";
 import React, { startTransition, useEffect, useRef, useState } from "react";
 import NextImage from "next/image";
 import { cn } from "@/common/lib/utils";

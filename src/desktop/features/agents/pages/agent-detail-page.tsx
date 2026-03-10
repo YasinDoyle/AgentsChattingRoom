@@ -1,3 +1,4 @@
+"use client";
 import { AgentEmbeddedForm } from "@/common/features/agents/components/forms";
 import { AgentConfigurationAssistant } from "@/common/features/agents/components/configuration";
 import { AgentPreviewChat } from "@/common/features/agents/components/preview";

@@ -1,3 +1,4 @@
+"use client";
 import type { Suggestion } from "@/common/features/chat/components/suggestions/suggestion.types";
 import {
   WorldClassChatContainer,

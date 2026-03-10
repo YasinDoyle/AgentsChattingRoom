@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/common/components/ui/button";
 import { AGENT_COMBINATIONS, AgentCombinationType } from "@/core/config/agents";
 import { useAgents } from "@/core/hooks/use-agents";

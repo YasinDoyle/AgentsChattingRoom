@@ -1,3 +1,4 @@
+"use client";
 import { ExperimentalInBrowserAgent } from "@/common/lib/runnable-agent";
 import {
   useObservableFromState,
@@ -7,7 +8,14 @@ import { AgentDef } from "@/common/types/agent";
 import { ChatMessage } from "@/common/types/chat";
 import { getLLMProviderConfig } from "@/core/config/ai";
 import { useAgentChat } from "@agent-labs/agent-chat";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { map } from "rxjs";
 
 import { cn } from "@/common/lib/utils";
@@ -37,135 +45,153 @@ export interface AgentChatContainerRef {
   handleSendMessage: () => Promise<void>;
 }
 
-export const AgentChatContainer = forwardRef<AgentChatContainerRef, AgentChatContainerProps>(({
-  agentDef: agentDef,
-  messages,
-  inputMessage,
-  onInputChange,
-  showInfoPanel = false,
-  defaultInfoExpanded = false,
-  compactInfo = false,
-  enableFloatingInfo = false,
-  className,
-  bottomContent, // 新增
-}, ref) => {
-  const agentDef$ = useObservableFromState(agentDef);
-  const [initialAgent] = useState(() => {
-    const { providerConfig, model } = getLLMProviderConfig();
-    return new ExperimentalInBrowserAgent({
-      ...agentDef,
-      model,
-      baseURL: providerConfig.baseUrl,
-      apiKey: providerConfig.apiKey,
+export const AgentChatContainer = forwardRef<
+  AgentChatContainerRef,
+  AgentChatContainerProps
+>(
+  (
+    {
+      agentDef: agentDef,
+      messages,
+      inputMessage,
+      onInputChange,
+      showInfoPanel = false,
+      defaultInfoExpanded = false,
+      compactInfo = false,
+      enableFloatingInfo = false,
+      className,
+      bottomContent, // 新增
+    },
+    ref,
+  ) => {
+    const agentDef$ = useObservableFromState(agentDef);
+    const [initialAgent] = useState(() => {
+      const { providerConfig, model } = getLLMProviderConfig();
+      return new ExperimentalInBrowserAgent({
+        ...agentDef,
+        model,
+        baseURL: providerConfig.baseUrl,
+        apiKey: providerConfig.apiKey,
+      });
     });
-  })
-  const agent = useStateFromObservable(
-    () =>
-      agentDef$.pipe(
-        map((agentDef) => {
-          const { providerConfig, model } = getLLMProviderConfig();
-          return new ExperimentalInBrowserAgent({
-            ...agentDef,
-            model,
-            baseURL: providerConfig.baseUrl,
-            apiKey: providerConfig.apiKey,
-          });
-        })
-      ),
-    initialAgent
-  );
+    const agent = useStateFromObservable(
+      () =>
+        agentDef$.pipe(
+          map((agentDef) => {
+            const { providerConfig, model } = getLLMProviderConfig();
+            return new ExperimentalInBrowserAgent({
+              ...agentDef,
+              model,
+              baseURL: providerConfig.baseUrl,
+              apiKey: providerConfig.apiKey,
+            });
+          }),
+        ),
+      initialAgent,
+    );
 
-  const { uiMessages, isAgentResponding, sendMessage, abortAgentRun } = useAgentChat({
-    agent,
-    defaultToolDefs: [],
-    defaultContexts: [{
-      description: "你的设定",
-      value: JSON.stringify(agentDef),
-    }],
-    initialMessages: messages.map((message) => ({
-      id: message.id,
-      role: message.isUser ? "user" : "assistant",
-      content: message.content,
-    })),
-  });
+    const { uiMessages, isAgentResponding, sendMessage, abortAgentRun } =
+      useAgentChat({
+        agent,
+        defaultToolDefs: [],
+        defaultContexts: [
+          {
+            description: "你的设定",
+            value: JSON.stringify(agentDef),
+          },
+        ],
+        initialMessages: messages.map((message) => ({
+          id: message.id,
+          role: message.isUser ? "user" : "assistant",
+          content: message.content,
+        })),
+      });
 
-  const messagesRef = useRef<AgentChatMessagesRef>(null);
+    const messagesRef = useRef<AgentChatMessagesRef>(null);
 
-  // 悬浮层状态管理
-  const [isFloatingInfoVisible, setIsFloatingInfoVisible] = useState(false);
+    // 悬浮层状态管理
+    const [isFloatingInfoVisible, setIsFloatingInfoVisible] = useState(false);
 
-  // 处理输入变化 - 不再自动隐藏悬浮层
-  const handleInputChange = useCallback((value: string) => {
-    onInputChange(value);
-  }, [onInputChange]);
+    // 处理输入变化 - 不再自动隐藏悬浮层
+    const handleInputChange = useCallback(
+      (value: string) => {
+        onInputChange(value);
+      },
+      [onInputChange],
+    );
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    const handleSendMessage = async () => {
+      if (!inputMessage.trim()) return;
 
-    try {
-      // 发送消息时自动隐藏悬浮层
-      if (enableFloatingInfo) {
-        setIsFloatingInfoVisible(false);
+      try {
+        // 发送消息时自动隐藏悬浮层
+        if (enableFloatingInfo) {
+          setIsFloatingInfoVisible(false);
+        }
+
+        await sendMessage(inputMessage);
+        onInputChange(""); // 清空输入
+      } catch (error) {
+        console.error("发送消息失败:", error);
       }
-      
-      await sendMessage(inputMessage);
-      onInputChange(""); // 清空输入
-    } catch (error) {
-      console.error("发送消息失败:", error);
-    }
-  };
+    };
 
-  // 暴露给外部的控制接口
-  useImperativeHandle(ref, () => ({
-    showFloatingInfo: () => setIsFloatingInfoVisible(true),
-    hideFloatingInfo: () => setIsFloatingInfoVisible(false),
-    toggleFloatingInfo: () => setIsFloatingInfoVisible(prev => !prev),
-    isFloatingInfoVisible: () => isFloatingInfoVisible,
-    handleSendMessage,
-  }), [isFloatingInfoVisible, handleSendMessage]);
+    // 暴露给外部的控制接口
+    useImperativeHandle(
+      ref,
+      () => ({
+        showFloatingInfo: () => setIsFloatingInfoVisible(true),
+        hideFloatingInfo: () => setIsFloatingInfoVisible(false),
+        toggleFloatingInfo: () => setIsFloatingInfoVisible((prev) => !prev),
+        isFloatingInfoVisible: () => isFloatingInfoVisible,
+        handleSendMessage,
+      }),
+      [isFloatingInfoVisible, handleSendMessage],
+    );
 
-  // 简单的自动滚动：当消息数量变化时滚动到底部
-  useEffect(() => {
-    if (messagesRef.current) {
-      messagesRef.current.scrollToBottom();
-    }
-  }, [uiMessages.length]);
+    // 简单的自动滚动：当消息数量变化时滚动到底部
+    useEffect(() => {
+      if (messagesRef.current) {
+        messagesRef.current.scrollToBottom();
+      }
+    }, [uiMessages.length]);
 
-  return (
-    <div className={cn("min-w-0 flex flex-col", className)}>
-      {showInfoPanel ? (
-        <AgentChatHeaderWithInfo 
-          agent={agentDef} 
-          showInfoPanel={showInfoPanel}
-          defaultExpanded={defaultInfoExpanded}
-          compact={compactInfo}
-        />
-      ) : (
-        <AgentChatHeader 
+    return (
+      <div className={cn("min-w-0 flex flex-col", className)}>
+        {showInfoPanel ? (
+          <AgentChatHeaderWithInfo
+            agent={agentDef}
+            showInfoPanel={showInfoPanel}
+            defaultExpanded={defaultInfoExpanded}
+            compact={compactInfo}
+          />
+        ) : (
+          <AgentChatHeader
+            agent={agentDef}
+            showFloatingInfo={enableFloatingInfo}
+            isFloatingInfoVisible={isFloatingInfoVisible}
+            onFloatingInfoVisibilityChange={setIsFloatingInfoVisible}
+          />
+        )}
+        <AgentChatMessages
+          ref={messagesRef}
           agent={agentDef}
-          showFloatingInfo={enableFloatingInfo}
-          isFloatingInfoVisible={isFloatingInfoVisible}
-          onFloatingInfoVisibilityChange={setIsFloatingInfoVisible}
+          uiMessages={uiMessages}
+          isResponding={isAgentResponding}
+          messageTheme="default"
+          avatarTheme="default"
         />
-      )}
-      <AgentChatMessages
-        ref={messagesRef}
-        agent={agentDef}
-        uiMessages={uiMessages}
-        isResponding={isAgentResponding}
-        messageTheme="default"
-        avatarTheme="default"
-      />
-      {/* 新增：底部插槽 */}
-      {bottomContent}
-      <AgentChatInput
-        agent={agentDef}
-        value={inputMessage}
-        onChange={handleInputChange}
-        onSend={handleSendMessage}
-        onAbort={abortAgentRun}
-        sendDisabled={isAgentResponding}
-      />
-    </div>
-  );
-});
+        {/* 新增：底部插槽 */}
+        {bottomContent}
+        <AgentChatInput
+          agent={agentDef}
+          value={inputMessage}
+          onChange={handleInputChange}
+          onSend={handleSendMessage}
+          onAbort={abortAgentRun}
+          sendDisabled={isAgentResponding}
+        />
+      </div>
+    );
+  },
+);

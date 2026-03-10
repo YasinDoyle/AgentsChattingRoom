@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/common/components/ui/button";
 import { Textarea } from "@/common/components/ui/textarea";
 import { useDiscussions } from "@/core/hooks/use-discussions";

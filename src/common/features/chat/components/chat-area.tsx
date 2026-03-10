@@ -1,3 +1,4 @@
+"use client";
 import { InitialExperience } from "@/common/features/home/components/initial-experience";
 import { AGENT_COMBINATIONS, AgentCombinationType } from "@/core/config/agents";
 import { DEFAULT_SCENARIOS } from "@/core/config/guide-scenarios";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { bootstrapApp } from "@/core/bootstrap/app.bootstrap";
 

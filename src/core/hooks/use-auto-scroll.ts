@@ -1,3 +1,4 @@
+"use client";
 import { useMemoizedFn } from "ahooks";
 import { RefObject, useEffect, useRef } from "react";
 
