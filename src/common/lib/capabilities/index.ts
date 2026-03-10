@@ -1,0 +1,70 @@
+import type { ToolDefinition } from "@/common/lib/ai-service";
+
+export interface JsonSchema {
+  type?: string;
+  properties?: Record<string, JsonSchema>;
+  required?: string[];
+  items?: JsonSchema;
+  enum?: unknown[];
+  description?: string;
+  [key: string]: unknown;
+}
+
+export interface Capability {
+  name: string;
+  description: string;
+  schema: JsonSchema;
+  execute: (params: unknown) => Promise<unknown>;
+}
+
+export class CapabilityRegistry {
+  private static instance: CapabilityRegistry;
+  private capabilities = new Map<string, Capability>();
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new CapabilityRegistry();
+    }
+    return this.instance;
+  }
+
+  register(capability: Capability) {
+    this.capabilities.set(capability.name, capability);
+  }
+
+  registerAll(capabilities: Capability[]) {
+    capabilities.forEach((cap) => this.capabilities.set(cap.name, cap));
+  }
+
+  getCapabilities(): Capability[] {
+    return Array.from(this.capabilities.values());
+  }
+
+  hasCapability(name: string): boolean {
+    return this.capabilities.has(name);
+  }
+
+  async execute(
+    name: string,
+    params: unknown,
+    options: {
+      ignoreError?: boolean;
+    } = {},
+  ): Promise<unknown> {
+    console.log("[CapabilityRegistry] execute:", name, "params:", params);
+    const capability = this.capabilities.get(name);
+    if (!capability && !options.ignoreError) {
+      throw new Error(`Capability ${name} not found`);
+    }
+    return capability?.execute(params);
+  }
+}
+
+export const toToolDefinitions = (
+  capabilities: Capability[],
+): ToolDefinition[] =>
+  capabilities.map((capability) => ({
+    name: capability.name,
+    description: capability.description,
+    parameters: capability.schema,
+  }));
