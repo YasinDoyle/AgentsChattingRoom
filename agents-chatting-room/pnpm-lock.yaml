@@ -26,6 +26,9 @@ importers:
       '@ai-sdk/ui-utils':
         specifier: ^1.2.11
         version: 1.2.11(zod@4.3.6)
+      '@cardos/extension':
+        specifier: 0.2.0-beta.3
+        version: 0.2.0-beta.3(rxjs@7.8.2)
       '@isomorphic-git/lightning-fs':
         specifier: ^4.6.2
         version: 4.6.2
@@ -306,6 +309,11 @@ packages:
 
   '@bufbuild/protobuf@2.11.0':
     resolution: {integrity: sha512-sBXGT13cpmPR5BMgHE6UEEfEaShh5Ror6rfN3yEK5si7QVrtZg8LEPQb0VVhiLRUslD2yLnXtnRzG035J/mZXQ==}
+
+  '@cardos/extension@0.2.0-beta.3':
+    resolution: {integrity: sha512-iZ6bUkH/Qexn3g6StKKmrWjAwbpjteBU7+2m4HGpud+0Rf7ZekDjasyIsDg8uCZnxsYvO9Rq7D7+3lNni9PjPA==}
+    peerDependencies:
+      rxjs: ^7.8.1
 
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
@@ -4308,6 +4316,10 @@ snapshots:
       '@babel/helper-validator-identifier': 7.28.5
 
   '@bufbuild/protobuf@2.11.0': {}
+
+  '@cardos/extension@0.2.0-beta.3(rxjs@7.8.2)':
+    dependencies:
+      rxjs: 7.8.2
 
   '@emnapi/core@1.8.1':
     dependencies:
