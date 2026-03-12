@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@cardos/extension"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**" },

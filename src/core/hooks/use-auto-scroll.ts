@@ -19,7 +19,7 @@ interface UseAutoScrollOptions {
 }
 
 export function useAutoScroll(
-  containerRef: RefObject<HTMLDivElement>,
+  containerRef: RefObject<HTMLDivElement | null>,
   _content: unknown,
   options: UseAutoScrollOptions = {},
 ) {

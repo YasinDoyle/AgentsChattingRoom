@@ -2,25 +2,21 @@ import { AgentForm } from "@/common/features/agents/components/forms";
 import { AgentList } from "@/common/features/agents/components/lists/agent-list";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
-import { useAgentForm } from "@/core/hooks/useAgentForm";
-import { useAgents } from "@/core/hooks/useAgents";
+import { useAgentForm } from "@/core/hooks/use-agent-form";
+import { useAgents } from "@/core/hooks/use-agents";
 import { usePresenter } from "@/core/presenter";
 import { Loader2, PlusCircle, Search } from "lucide-react";
 import match from "pinyin-match";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 export function AddAgentDialogContent() {
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
   const presenter = usePresenter();
   const { agents, isLoading } = useAgents();
-  const {
-    isFormOpen,
-    setIsFormOpen,
-    editingAgent,
-    handleSubmit,
-  } = useAgentForm(agents, presenter.agents.update);
+  const { isFormOpen, setIsFormOpen, editingAgent, handleSubmit } =
+    useAgentForm(agents, presenter.agents.update);
 
   // 使用 useMemo 优化搜索过滤逻辑
   const filteredAgents = useMemo(() => {
@@ -32,10 +28,12 @@ export function AddAgentDialogContent() {
     return agents.filter((agent) => {
       // 添加空值检查
       const nameMatch =
-        (agent.name?.toLowerCase().includes(query) || false) ||
+        agent.name?.toLowerCase().includes(query) ||
+        false ||
         (agent.name ? match.match(agent.name, query) : false);
       const personalityMatch =
-        (agent.personality?.toLowerCase().includes(query) || false) ||
+        agent.personality?.toLowerCase().includes(query) ||
+        false ||
         (agent.personality ? match.match(agent.personality, query) : false);
       const idMatch = agent.id?.toLowerCase().includes(query) || false;
 
@@ -81,7 +79,7 @@ export function AddAgentDialogContent() {
             agents={filteredAgents}
             loading={isLoading}
             onEditAgentWithAI={(agent) => {
-              navigate(`/agents/${agent.id}?tab=ai-create`);
+              router.push(`/agents/${agent.id}?tab=ai-create`);
             }}
             onDeleteAgent={presenter.agents.remove}
           />
@@ -96,4 +94,4 @@ export function AddAgentDialogContent() {
       />
     </div>
   );
-} 
+}

@@ -1,9 +1,12 @@
-import { DesktopApp } from "@/desktop/desktop-app";
-// import { MobileApp } from "@/mobile/mobile-app";
-import { useBreakpointContext } from "@/common/components/common/breakpoint-provider";
+"use client";
+
+import dynamic from "next/dynamic";
+
+const DesktopApp = dynamic(
+  () => import("@/desktop/desktop-app").then((m) => m.DesktopApp),
+  { ssr: false },
+);
 
 export default function App() {
-  const { isMobile } = useBreakpointContext();
-
-  return /*isMobile ? <MobileApp /> :*/ <DesktopApp />;
+  return <DesktopApp />;
 }

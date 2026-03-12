@@ -1,4 +1,4 @@
-// Avatar primitives are no longer used directly here
+"use client";
 import { SmartAvatar } from "@/common/components/ui/smart-avatar";
 import {
   Popover,
@@ -9,9 +9,12 @@ import { AgentInfoCard } from "@/common/features/agents/components/cards/agent-i
 import { AgentDef } from "@/common/types/agent";
 import { cn } from "@/common/lib/utils";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import { useAvatarInteraction } from "./use-avatar-interaction";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
+import {
+  useInteractionStore,
+  type InteractionRect,
+} from "@/common/features/chat/stores/interaction.store";
 
 export interface ClickableAgentAvatarProps {
   agent: AgentDef | undefined;
@@ -53,19 +56,107 @@ export function ClickableAgentAvatar({
   const [open, setOpen] = useState(false);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(false);
-  const userInteraction = useAvatarInteraction<HTMLSpanElement>({
-    agentId: "user",
-    isUser: true,
-  });
-  const agentInteraction = useAvatarInteraction<HTMLButtonElement>({
-    agentId: agent?.id,
-    enableDoubleClick: true,
-  });
 
-  const attachUserAvatar = userInteraction.attachAvatar;
-  const attachAgentAvatar = agentInteraction.attachAvatar;
-  const agentControls = agentInteraction.controls;
-  const handleDoubleClick = agentInteraction.handleDoubleClick;
+  // user 头像 callback ref → state，避免 React Compiler ref 污染
+  const [userElement, setUserElement] = useState<HTMLSpanElement | null>(null);
+  const attachUserAvatar = useCallback((node: HTMLSpanElement | null) => {
+    setUserElement(node);
+  }, []);
+
+  // agent 头像 callback ref → state
+  const [agentElement, setAgentElement] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const attachAgentAvatar = useCallback((node: HTMLButtonElement | null) => {
+    setAgentElement(node);
+  }, []);
+
+  const agentControls = useAnimation();
+
+  const triggerInteraction = useInteractionStore((s) => s.triggerInteraction);
+  const setUserAvatarRect = useInteractionStore((s) => s.setUserAvatarRect);
+  const setAgentAvatarRect = useInteractionStore((s) => s.setAgentAvatarRect);
+  const impactTimestamp = useInteractionStore((s) =>
+    agent?.id ? s.impacts[agent.id] : 0,
+  );
+
+  // 同步 user 头像位置到 store
+  useEffect(() => {
+    if (!userElement) return;
+    const updateRect = () => {
+      const rect = userElement.getBoundingClientRect();
+      const value: InteractionRect = {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+      setAgentAvatarRect("user", value);
+      setUserAvatarRect(value);
+    };
+    updateRect();
+    window.addEventListener("scroll", updateRect, true);
+    window.addEventListener("resize", updateRect);
+    return () => {
+      window.removeEventListener("scroll", updateRect, true);
+      window.removeEventListener("resize", updateRect);
+      setAgentAvatarRect("user", null);
+      setUserAvatarRect(null);
+    };
+  }, [userElement, setAgentAvatarRect, setUserAvatarRect]);
+
+  // 同步 agent 头像位置到 store
+  useEffect(() => {
+    const id = agent?.id;
+    if (!id || !agentElement) return;
+    const updateRect = () => {
+      const rect = agentElement.getBoundingClientRect();
+      const value: InteractionRect = {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+      setAgentAvatarRect(id, value);
+    };
+    updateRect();
+    window.addEventListener("scroll", updateRect, true);
+    window.addEventListener("resize", updateRect);
+    return () => {
+      window.removeEventListener("scroll", updateRect, true);
+      window.removeEventListener("resize", updateRect);
+      setAgentAvatarRect(id, null);
+    };
+  }, [agent?.id, agentElement, setAgentAvatarRect]);
+
+  // 被击中时触发抖动动画
+  useEffect(() => {
+    if (impactTimestamp > 0) {
+      agentControls.start({
+        x: [0, -10, 10, -10, 10, 0],
+        transition: { duration: 0.4 },
+      });
+    }
+  }, [impactTimestamp, agentControls]);
+
+  const handleDoubleClick = useCallback(() => {
+    const id = agent?.id;
+    if (!id || !agentElement) return;
+    const rect = agentElement.getBoundingClientRect();
+    const types: ("poop" | "trash")[] = ["poop", "trash"];
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    triggerInteraction({
+      sourceAgentId: "user",
+      targetAgentId: id,
+      targetRect: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      },
+      type: randomType,
+    });
+  }, [agent?.id, agentElement, triggerInteraction]);
 
   // 点击头像跳转到详情页
   const handleViewDetail = useCallback(
