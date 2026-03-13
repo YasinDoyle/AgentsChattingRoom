@@ -11,8 +11,8 @@ import {
   type ActivityItem,
 } from "@/core/stores/activity-bar.store";
 import { useAuth } from "@/core/hooks/use-auth";
-import { ActivityBar } from "composite-kit";
-import { CircleUserRound, Github, LayoutDashboard } from "lucide-react";
+import { ActivityBar } from "@/common/components/common/activity-bar";
+import { CircleUserRound, Github } from "lucide-react";
 interface ActivityBarProps {
   className?: string;
 }
@@ -86,7 +86,7 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
 
   const handleGithubClick = useCallback(() => {
     window.open(
-      "https://github.com/Peiiii/AgentVerse",
+      "https://github.com/YasinDoyle",
       "_blank",
       "noopener,noreferrer",
     );
@@ -138,16 +138,12 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
     <ActivityBar.Root
       expanded={expanded}
       activeId={activeId}
-      expandedWidth={200}
+      expandedWidth={240}
       onExpandedChange={handleExpandedChange}
       onActiveChange={handleActiveChange}
       className={cn("flex-shrink-0", className)}
     >
-      <ActivityBar.Header
-        icon={<LayoutDashboard className="w-5 h-5" />}
-        title="AgentVerse"
-        showSearch={false}
-      />
+      <ActivityBar.Header title="AgentChattingRoom" />
 
       <ActivityBar.GroupList>
         <ActivityBar.Group title="main">
@@ -179,9 +175,9 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
           </ActivityBar.Group>
         )}
         {hasFooterItems && <ActivityBar.Separator />}
-        <div className="px-3 py-2 space-y-2">
-          <LanguageToggle className="w-full" />
-          <ThemeToggle className="w-full" />
+        <div className="py-1">
+          <LanguageToggle expanded={expanded} />
+          <ThemeToggle expanded={expanded} />
         </div>
       </ActivityBar.Footer>
     </ActivityBar.Root>
