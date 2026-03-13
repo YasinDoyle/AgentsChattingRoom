@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/core/hooks/use-auth";
-import { AuthRoutes } from "./auth-routes";
-import { Redirect } from "@/common/components/common/redirect";
 
 const AUTH_PATHS = ["/login", "/verify", "/forgot", "/reset"];
 
@@ -15,6 +13,7 @@ interface AuthGateProps {
 
 export function AuthGate({ children }: AuthGateProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { status, refresh } = useAuth();
 
   const isAuthPath = AUTH_PATHS.some((path) => pathname.startsWith(path));
@@ -22,15 +21,31 @@ export function AuthGate({ children }: AuthGateProps) {
   useEffect(() => {
     if (status === "idle") {
       void refresh();
+      return;
     }
-  }, [refresh, status]);
 
-  if (isAuthPath) {
-    if (status === "authenticated" && pathname === "/login") {
-      return <Redirect to="/chat" />;
+    // 认证页面：已登录则跳转到业务页
+    if (isAuthPath && status === "authenticated") {
+      router.replace("/chat");
+      return;
     }
-    return <AuthRoutes />;
+
+    // 业务页面：未登录则跳转登录页
+    if (!isAuthPath && status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, isAuthPath, refresh, router]);
+
+  // 认证页面：未登录放行
+  if (isAuthPath) {
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  // 业务页面：已登录放行
+  if (status === "authenticated") {
+    return <>{children}</>;
+  }
+
+  // 其他状态（idle / loading / unauthenticated 等待跳转）
+  return null;
 }

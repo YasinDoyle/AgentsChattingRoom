@@ -1,10 +1,8 @@
 import { getPresenter } from "@/core/presenter/presenter";
 import { useIconStore } from "@/core/stores/icon.store";
-import { useRouteTreeStore } from "@/core/stores/route-tree.store";
 import { connectRouterWithActivityBar } from "@/core/utils/connect-router-with-activity-bar";
 import { defineExtension, Disposable } from "@cardos/extension";
 import { Sparkles } from "lucide-react";
-import { AllInOneAgentPage } from "../pages/all-in-one-agent-page";
 import { i18n } from "@/core/hooks/use-i18n";
 
 export const allInOneAgentExtension = defineExtension({
@@ -34,17 +32,6 @@ export const allInOneAgentExtension = defineExtension({
           icon: "sparkles",
           order: 5,
         }),
-      ),
-    );
-    subscriptions.push(
-      Disposable.from(
-        useRouteTreeStore.getState().addRoutes([
-          {
-            id: "all-in-one-agent",
-            path: "/all-in-one-agent",
-            element: <AllInOneAgentPage />,
-          },
-        ]),
       ),
     );
     subscriptions.push(

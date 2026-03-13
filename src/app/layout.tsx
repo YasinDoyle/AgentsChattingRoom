@@ -1,10 +1,11 @@
 import "./globals.css";
+import ClientShell from "./client-shell";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

@@ -1,12 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { Redirect } from "@/common/components/common/redirect";
 
-const DesktopApp = dynamic(
-  () => import("@/desktop/desktop-app").then((m) => m.DesktopApp),
-  { ssr: false },
-);
-
-export default function App() {
-  return <DesktopApp />;
+export default function HomePage() {
+  return <Redirect to="/chat" />;
 }

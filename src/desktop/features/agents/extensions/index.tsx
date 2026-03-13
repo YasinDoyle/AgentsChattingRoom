@@ -1,11 +1,8 @@
 import { getPresenter } from "@/core/presenter/presenter";
 import { useIconStore } from "@/core/stores/icon.store";
-import { useRouteTreeStore } from "@/core/stores/route-tree.store";
 import { connectRouterWithActivityBar } from "@/core/utils/connect-router-with-activity-bar";
 import { defineExtension, Disposable } from "@cardos/extension";
 import { Bot } from "lucide-react";
-import { AgentsPage } from "../pages/agents-page";
-import { AgentDetailPage } from "../pages/agent-detail-page";
 import { ModuleOrderEnum } from "@/core/config/module-order";
 import { i18n } from "@/core/hooks/use-i18n";
 
@@ -36,22 +33,6 @@ export const desktopAgentsExtension = defineExtension({
           icon: "bot",
           order: ModuleOrderEnum.AGENTS,
         }),
-      ),
-    );
-    subscriptions.push(
-      Disposable.from(
-        useRouteTreeStore.getState().addRoutes([
-          {
-            id: "agents",
-            path: "/agents",
-            element: <AgentsPage />,
-          },
-          {
-            id: "agent-detail",
-            path: "/agents/:agentId",
-            element: <AgentDetailPage />,
-          },
-        ]),
       ),
     );
     subscriptions.push(

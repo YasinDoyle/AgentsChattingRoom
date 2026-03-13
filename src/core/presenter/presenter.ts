@@ -1,7 +1,6 @@
 import {
   ActivityBarManager,
   IconManager,
-  RouteTreeManager,
   NavigationManager,
   DiscussionsManager,
   AgentsManager,
@@ -15,7 +14,6 @@ export class Presenter {
   // managers
   readonly activityBar = new ActivityBarManager();
   readonly icon = new IconManager();
-  readonly routeTree = new RouteTreeManager();
   readonly navigation = new NavigationManager();
   readonly discussions = new DiscussionsManager();
   readonly agents = new AgentsManager();
