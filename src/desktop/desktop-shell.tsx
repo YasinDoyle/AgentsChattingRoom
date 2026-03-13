@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@/common/components/common/theme";
+import { ThemeProvider, useTheme } from "@/common/components/common/theme";
 import { ActivityBarComponent } from "@/common/features/app/components/activity-bar";
 import { allInOneAgentExtension } from "@/common/features/all-in-one-agent";
 import { cn } from "@/common/lib/utils";
@@ -11,21 +11,9 @@ import { desktopAgentsExtension } from "@/desktop/features/agents/extensions";
 import { desktopChatExtension } from "@/desktop/features/chat/extensions";
 import { AuthGate } from "@/common/features/auth/components/auth-gate";
 
-export function DesktopShell({ children }: { children: React.ReactNode }) {
-  useAppBootstrap();
-  const { initialized } = useSetupApp({
-    extensions: [
-      allInOneAgentExtension,
-      desktopChatExtension,
-      desktopAgentsExtension,
-    ],
-  });
+function ShellContent({ children }: { children: React.ReactNode }) {
   const { rootClassName } = useTheme();
   const { height } = useViewportHeight();
-
-  if (!initialized) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="fixed inset-0 flex flex-col" style={{ height }}>
@@ -38,5 +26,26 @@ export function DesktopShell({ children }: { children: React.ReactNode }) {
         </AuthGate>
       </div>
     </div>
+  );
+}
+
+export function DesktopShell({ children }: { children: React.ReactNode }) {
+  useAppBootstrap();
+  const { initialized } = useSetupApp({
+    extensions: [
+      allInOneAgentExtension,
+      desktopChatExtension,
+      desktopAgentsExtension,
+    ],
+  });
+
+  if (!initialized) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <ThemeProvider>
+      <ShellContent>{children}</ShellContent>
+    </ThemeProvider>
   );
 }

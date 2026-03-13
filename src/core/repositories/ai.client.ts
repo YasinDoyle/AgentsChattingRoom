@@ -73,8 +73,12 @@ export function createAIService(): AIService {
   });
 }
 
-// 默认实例
-export const aiService = createAIService();
+// 懒加载实例，避免模块加载时因缺少 API key 而崩溃
+let _aiService: AIService | null = null;
+export function getAIService(): AIService {
+  if (!_aiService) _aiService = createAIService();
+  return _aiService;
+}
 
 export function createAIServiceForProvider(
   providerType: SupportedAIProvider,
