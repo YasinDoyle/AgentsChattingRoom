@@ -13,9 +13,9 @@ export function WelcomeHeader({ className }: WelcomeHeaderProps) {
       <motion.div className="relative">
         <motion.h1 className="relative text-4xl md:text-5xl font-bold tracking-tight">
           <span className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 bg-[200%_auto] animate-gradient-x bg-clip-text text-transparent select-none">
-            AgentVerse
+            AgentsChattingRoom
           </span>
-          <span className="invisible">AgentVerse</span>
+          <span className="invisible">AgentsChattingRoom</span>
         </motion.h1>
         <div className="absolute -inset-x-20 -inset-y-10 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 blur-2xl opacity-30" />

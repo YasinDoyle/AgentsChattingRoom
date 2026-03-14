@@ -12,7 +12,7 @@ export const desktopAgentsExtension = defineExtension({
     name: "Agents",
     description: "Agents",
     version: "1.0.0",
-    author: "AgentVerse",
+    author: "AgentsChattingRoom",
     icon: "bot",
   },
   activate: ({ subscriptions }) => {

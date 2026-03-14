@@ -143,7 +143,7 @@ export function ActivityBarComponent({ className }: ActivityBarProps) {
       onActiveChange={handleActiveChange}
       className={cn("flex-shrink-0", className)}
     >
-      <ActivityBar.Header title="AgentChattingRoom" />
+      <ActivityBar.Header title="AgentsChattingRoom" />
 
       <ActivityBar.GroupList>
         <ActivityBar.Group title="main">

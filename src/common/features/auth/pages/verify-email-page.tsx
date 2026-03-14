@@ -46,7 +46,7 @@ export function VerifyEmailPage() {
       }
       if (result.ok) {
         setStatus("success");
-        setMessage("邮箱验证成功，欢迎使用 AgentVerse");
+        setMessage("邮箱验证成功，欢迎使用 AgentsChattingRoom！");
       } else {
         setStatus("error");
         setMessage(result.error || "验证失败，请稍后再试");

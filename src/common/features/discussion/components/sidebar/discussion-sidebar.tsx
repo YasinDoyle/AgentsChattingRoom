@@ -41,7 +41,7 @@ export function DiscussionSidebar() {
 
       <div className="px-5 py-3 border-t border-border/40 bg-muted/20">
         <a
-          href="https://github.com/Peiiii/AgentVerse"
+          href="https://github.com/YasinDoyle/AgentsChattingRoom"
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"

@@ -11,7 +11,7 @@ export const allInOneAgentExtension = defineExtension({
     name: "All-in-One Agent",
     description: "全局超级智能体，系统级控制台",
     version: "1.0.0",
-    author: "AgentVerse",
+    author: "AgentsChattingRoom",
     icon: "sparkles",
   },
   activate: ({ subscriptions }) => {

@@ -103,7 +103,7 @@ export function LoginPage() {
     <AuthShell>
       <Card>
         <CardHeader>
-          <CardTitle>欢迎使用 AgentVerse</CardTitle>
+          <CardTitle>欢迎使用 AgentsChattingRoom</CardTitle>
           <CardDescription>登录或注册后即可发布与使用 Bot</CardDescription>
         </CardHeader>
         <CardContent>

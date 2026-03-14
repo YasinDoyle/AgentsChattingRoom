@@ -11,7 +11,7 @@ export const desktopChatExtension = defineExtension({
     name: "Chat",
     description: "Chat with the user",
     version: "1.0.0",
-    author: "AgentVerse",
+    author: "AgentsChattingRoom",
     icon: "message",
   },
   activate: ({ subscriptions }) => {
