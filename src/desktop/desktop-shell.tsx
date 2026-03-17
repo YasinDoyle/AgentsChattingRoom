@@ -1,6 +1,8 @@
 "use client";
 
+import { BreakpointProvider } from "@/common/components/common/breakpoint-provider";
 import { ThemeProvider, useTheme } from "@/common/components/common/theme";
+import { ModalProvider } from "@/common/components/ui/modal";
 import { ActivityBarComponent } from "@/common/features/app/components/activity-bar";
 import { allInOneAgentExtension } from "@/common/features/all-in-one-agent";
 import { cn } from "@/common/lib/utils";
@@ -45,7 +47,11 @@ export function DesktopShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <ShellContent>{children}</ShellContent>
+      <BreakpointProvider>
+        <ModalProvider>
+          <ShellContent>{children}</ShellContent>
+        </ModalProvider>
+      </BreakpointProvider>
     </ThemeProvider>
   );
 }
