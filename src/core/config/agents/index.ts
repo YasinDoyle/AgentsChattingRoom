@@ -27,6 +27,12 @@ import { IMPLEMENTATION_ARCHITECT } from "./practical-agents/implementation-arch
 import { STARTUP_NAVIGATOR } from "./practical-agents/startup-navigator";
 // 导入杠精主持人
 import { TROLL_MODERATOR } from "./moderators/troll-moderator";
+// 导入面试团队角色
+import { FRONTEND_EXPERT } from "./interview-agents/frontend-expert";
+import { HR_INTERVIEWER } from "./interview-agents/hr-interviewer";
+import { AGENT_DEV_EXPERT } from "./interview-agents/agent-dev-expert";
+import { STRESS_INTERVIEWER } from "./interview-agents/stress-interviewer";
+import { NEXTJS_FULLSTACK_EXPERT } from "./interview-agents/nextjs-fullstack-expert";
 
 // 定义组合类型
 export type AgentCombinationType =
@@ -44,7 +50,8 @@ export type AgentCombinationType =
   | "narrativeExploration"
   | "practicalTeam"
   | "experimentalThinking" // 新增实验性思考团队
-  | "trollTeam"; // 杠精小队
+  | "trollTeam" // 杠精小队
+  | "interviewTeam"; // 模拟面试团队
 
 // 定义参与者 ID
 export const PARTICIPANT_IDS = {
@@ -113,6 +120,12 @@ export const PARTICIPANT_IDS = {
   COURT_TUTOR: "court-tutor", // 太傅
   COURT_EUNUCH: "court-eunuch", // 太监总管
   COURT_EMPEROR: "court-emperor", // 大同皇帝
+  // 面试团队
+  FRONTEND_EXPERT: "frontend-expert",
+  HR_INTERVIEWER: "hr-interviewer",
+  AGENT_DEV_EXPERT: "agent-dev-expert",
+  STRESS_INTERVIEWER: "stress-interviewer",
+  NEXTJS_FULLSTACK_EXPERT: "nextjs-fullstack-expert",
 } as const;
 
 // 定义主持人 ID
@@ -947,6 +960,12 @@ export const PARTICIPANTS_MAP: Record<string, Omit<AgentDef, "id">> = {
     bias: "圣意至上",
     responseStyle: "谦卑顺从、绵里藏针、阴阳怪气",
   },
+  // 面试团队
+  [PARTICIPANT_IDS.FRONTEND_EXPERT]: FRONTEND_EXPERT,
+  [PARTICIPANT_IDS.HR_INTERVIEWER]: HR_INTERVIEWER,
+  [PARTICIPANT_IDS.AGENT_DEV_EXPERT]: AGENT_DEV_EXPERT,
+  [PARTICIPANT_IDS.STRESS_INTERVIEWER]: STRESS_INTERVIEWER,
+  [PARTICIPANT_IDS.NEXTJS_FULLSTACK_EXPERT]: NEXTJS_FULLSTACK_EXPERT,
 };
 
 // 主持人映射
@@ -1496,6 +1515,21 @@ export const AGENT_COMBINATIONS = {
       PARTICIPANT_IDS.SYSTEM_THINKER,
       PARTICIPANT_IDS.LOGIC_ANALYZER,
       PARTICIPANT_IDS.COGNITIVE_DETECTIVE,
+    ],
+  },
+
+  // 模拟面试团队
+  interviewTeam: {
+    name: "模拟面试团队",
+    description:
+      "由前端专家、HR、Agent开发专家和压力面试官组成的全方位面试模拟团队",
+    moderator: MODERATOR_IDS.DISCUSSION_MODERATOR,
+    participants: [
+      PARTICIPANT_IDS.FRONTEND_EXPERT,
+      PARTICIPANT_IDS.HR_INTERVIEWER,
+      PARTICIPANT_IDS.AGENT_DEV_EXPERT,
+      PARTICIPANT_IDS.STRESS_INTERVIEWER,
+      PARTICIPANT_IDS.NEXTJS_FULLSTACK_EXPERT,
     ],
   },
 } as const;
