@@ -43,8 +43,8 @@ export function ChatPage() {
 
   // 桌面端布局
   return (
-    <>
-      <div className="flex-1 flex justify-center w-full h-full min-h-0">
+    <div className="flex h-full w-full">
+      <div className="flex-1 flex justify-center min-w-0 h-full">
         <div className="w-full max-w-[1920px] h-full">
           <ResponsiveContainer
             sidebarContent={
@@ -89,6 +89,6 @@ export function ChatPage() {
           onOpenChange={setShowMemberDrawer}
         />
       )}
-    </>
+    </div>
   );
 }
