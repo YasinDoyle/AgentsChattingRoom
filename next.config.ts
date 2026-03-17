@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3"],
   transpilePackages: ["@cardos/extension"],
   images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "inline",
     remotePatterns: [
       { protocol: "https", hostname: "**" },
       { protocol: "http", hostname: "**" },
