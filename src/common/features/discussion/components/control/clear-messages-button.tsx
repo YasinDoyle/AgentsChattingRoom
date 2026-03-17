@@ -35,6 +35,8 @@ export function ClearMessagesButton({
       okText: "确认清空",
       cancelText: "取消",
       onOk: () => {
+        // 先暂停讨论，防止 AI 还在输出时清空
+        presenter.discussionControl.pause();
         if (mode === "current" && currentDiscussion) {
           presenter.discussions.clearMessages(currentDiscussion.id);
         } else if (mode === "all") {

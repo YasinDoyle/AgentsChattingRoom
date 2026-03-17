@@ -37,8 +37,6 @@ export const MessageInputDesktop = forwardRef<
   MessageInputProps
 >(function MessageInputDesktop({ className }, ref) {
   const presenter = usePresenter();
-  const isAgentResponding =
-    presenter.discussionControl.getSnapshot().currentSpeakerId !== null;
 
   const {
     input,
@@ -49,13 +47,20 @@ export const MessageInputDesktop = forwardRef<
     onSendMessage: async (content: string, agentId: string) => {
       const currentId = presenter.discussionControl.getCurrentDiscussionId();
       if (!currentId) return;
+      // 如果 AI 正在输出，先暂停当前回复
+      if (presenter.discussionControl.getSnapshot().currentSpeakerId) {
+        presenter.discussionControl.pause();
+      }
       const agentMessage = await presenter.messages.add(currentId, {
         content,
         agentId,
         type: "text",
         timestamp: new Date(),
       });
-      if (agentMessage) await presenter.discussionControl.process(agentMessage);
+      // Fire-and-forget: don't block input on AI processing
+      if (agentMessage) {
+        presenter.discussionControl.process(agentMessage).catch(console.error);
+      }
     },
     forwardedRef: ref,
   });
@@ -117,16 +122,6 @@ export const MessageInputDesktop = forwardRef<
       if (e.defaultPrevented) {
         return;
       }
-    }
-    if (
-      e.key === "Enter" &&
-      !e.shiftKey &&
-      !e.metaKey &&
-      !e.ctrlKey &&
-      isAgentResponding
-    ) {
-      e.preventDefault();
-      return;
     }
     baseHandleKeyDown(e);
   };
