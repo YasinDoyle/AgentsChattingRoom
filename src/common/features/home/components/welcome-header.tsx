@@ -11,7 +11,7 @@ export function WelcomeHeader({ className }: WelcomeHeaderProps) {
   return (
     <div className={cn("space-y-4", className)}>
       <motion.div className="relative">
-        <motion.h1 className="relative text-4xl md:text-5xl font-bold tracking-tight">
+        <motion.h1 className="relative text-4xl md:text-5xl font-bold tracking-tight leading-tight pb-2">
           <span className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 bg-[200%_auto] animate-gradient-x bg-clip-text text-transparent select-none">
             AgentsChattingRoom
           </span>
