@@ -56,9 +56,7 @@ export function ResponsiveContainer({
       )}
 
       {/* 主内容区域 */}
-      <div className="flex-1 min-h-0 flex flex-col overflow-auto">
-        {mainContent}
-      </div>
+      <div className="flex-1 min-h-0 min-w-0 flex flex-col">{mainContent}</div>
     </div>
   );
 }

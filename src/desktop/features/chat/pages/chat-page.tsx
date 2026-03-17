@@ -44,8 +44,8 @@ export function ChatPage() {
   // 桌面端布局
   return (
     <>
-      <div className="flex-1 flex justify-center w-full">
-        <div className="w-full max-w-[1920px]">
+      <div className="flex-1 flex justify-center w-full h-full min-h-0">
+        <div className="w-full max-w-[1920px] h-full">
           <ResponsiveContainer
             sidebarContent={
               <div className="h-full bg-card">
