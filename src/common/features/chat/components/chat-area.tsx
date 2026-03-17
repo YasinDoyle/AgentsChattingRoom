@@ -4,7 +4,6 @@ import { AGENT_COMBINATIONS, AgentCombinationType } from "@/core/config/agents";
 import { DEFAULT_SCENARIOS } from "@/core/config/guide-scenarios";
 import { useDiscussionMembers } from "@/core/hooks/use-discussion-members";
 import { useDiscussions } from "@/core/hooks/use-discussions";
-import { useViewportHeight } from "@/core/hooks/use-viewport-height";
 import { cn } from "@/common/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { ChatEmptyGuide } from "./chat-empty-guide";
@@ -36,7 +35,6 @@ export function ChatArea({
   const { t } = useTranslation();
   const presenter = usePresenter();
   const { messages } = useMessages();
-  const { isKeyboardVisible } = useViewportHeight();
   const messageListRef = useRef<MessageListRef>(null);
   const messageInputRef = useRef<MessageInputRef>(null);
   const isFirstMessage = messages.length === 0;
@@ -255,7 +253,6 @@ export function ChatArea({
         className={cn(
           "flex-none border-t dark:border-gray-700",
           "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80",
-          isKeyboardVisible && "shadow-lg",
           inputAreaClassName,
         )}
       >

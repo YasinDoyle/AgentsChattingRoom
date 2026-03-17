@@ -163,11 +163,8 @@
       "description": "让 AI 专家团队集思广益，碰撞灵感"
     },
     "initialInput": {
-      "placeholderMobile": "描述你想探讨的话题，点击✨开始...",
       "placeholderDesktop": "描述你想探讨的话题，按回车开始...",
-      "hintMobile": "输入话题，点击✨开始",
       "hintDesktop": "按回车开始，让 AI 专家团队为你解答",
-      "submitHintMobile": "点击✨提交",
       "submitHintDesktop": "按回车键提交 ↵"
     }
   },
@@ -300,9 +297,6 @@
       "unknownError": "未知错误",
       "refreshFailed": "刷新失败"
     }
-  },
-  "mobile": {
-    "discussionSystem": "讨论系统"
   },
   "theme": {
     "switchToLight": "切换到浅色模式",

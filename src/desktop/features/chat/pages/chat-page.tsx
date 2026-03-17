@@ -3,7 +3,6 @@ import { ChatArea } from "@/common/features/chat/components/chat-area";
 import { useBreakpointContext } from "@/common/components/common/breakpoint-provider";
 import { DiscussionController } from "@/common/features/discussion/components/control/discussion-controller";
 import { DiscussionList } from "@/common/features/discussion/components/list/discussion-list";
-import { MobileMemberDrawer } from "@/common/features/discussion/components/member/mobile-member-drawer";
 import { DiscussionSidebar } from "@/common/features/discussion/components/sidebar/discussion-sidebar";
 import { ResponsiveContainer } from "@/common/components/layouts/responsive-container";
 import { UI_PERSIST_KEYS } from "@/core/config/ui-persist";
@@ -13,10 +12,7 @@ import { useIsPaused } from "@/core/hooks/use-discussion-runtime";
 import { useState } from "react";
 
 export function ChatPage() {
-  const { isDesktop, isLessThan } = useBreakpointContext();
-  // agents/messages 由内部业务组件直连 presenter/store，无需在此处传递
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [showMemberDrawer, setShowMemberDrawer] = useState(false);
+  const { isDesktop } = useBreakpointContext();
   const [showMembersForDesktop, setShowMembersForDesktop] = usePersistedState(
     false,
     {
@@ -32,16 +28,9 @@ export function ChatPage() {
   const status = isPaused ? "paused" : "active";
 
   const handleToggleMembers = () => {
-    if (isLessThan("lg")) {
-      setShowMemberDrawer((prev) => !prev);
-      return;
-    }
     setShowMembersForDesktop(!showMembersForDesktop);
   };
 
-  // 业务消息在 ChatArea 内部处理
-
-  // 桌面端布局
   return (
     <div className="flex h-full w-full">
       <div className="flex-1 flex justify-center min-w-0 h-full">
@@ -59,10 +48,6 @@ export function ChatPage() {
                     status={status}
                     onToggleMembers={handleToggleMembers}
                     enableSettings={false}
-                    showSidebarToggle={isLessThan("lg")}
-                    onToggleSidebar={() =>
-                      setShowMobileSidebar((prev) => !prev)
-                    }
                   />
                 )}
                 <div className="flex-1 min-h-0">
@@ -73,8 +58,6 @@ export function ChatPage() {
                 </div>
               </div>
             }
-            showMobileSidebar={showMobileSidebar}
-            onMobileSidebarChange={setShowMobileSidebar}
           />
         </div>
       </div>
@@ -82,12 +65,6 @@ export function ChatPage() {
         <div className="w-80 flex-none border-l border-border bg-card">
           <DiscussionSidebar />
         </div>
-      )}
-      {isLessThan("lg") && (
-        <MobileMemberDrawer
-          open={showMemberDrawer}
-          onOpenChange={setShowMemberDrawer}
-        />
       )}
     </div>
   );

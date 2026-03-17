@@ -3,7 +3,6 @@ import { cn } from "@/common/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { useBreakpointContext } from "@/common/components/common/breakpoint-provider";
 import { useTranslation } from "@/core/hooks/use-i18n";
 
 interface InitialInputProps {
@@ -24,7 +23,6 @@ export function InitialInput({
   const [isMultiline, setIsMultiline] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
-  const { isMobile } = useBreakpointContext();
 
   // 自动调整文本区域高度
   useEffect(() => {
@@ -122,11 +120,7 @@ export function InitialInput({
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onKeyDown={handleKeyDown}
-            placeholder={
-              isMobile
-                ? t("home.initialInput.placeholderMobile")
-                : t("home.initialInput.placeholderDesktop")
-            }
+            placeholder={t("home.initialInput.placeholderDesktop")}
             autoFocus={autoFocus}
             rows={1}
             className={cn(
@@ -204,9 +198,7 @@ export function InitialInput({
           "transition-all duration-200",
         )}
       >
-        {isMobile
-          ? t("home.initialInput.hintMobile")
-          : t("home.initialInput.hintDesktop")}
+        {t("home.initialInput.hintDesktop")}
       </motion.div>
 
       {/* 输入提示 */}
@@ -216,9 +208,7 @@ export function InitialInput({
           animate={{ opacity: 1, y: 0 }}
           className="absolute -bottom-8 right-2 text-xs text-purple-500/70 font-medium"
         >
-          {isMobile
-            ? t("home.initialInput.submitHintMobile")
-            : t("home.initialInput.submitHintDesktop")}
+          {t("home.initialInput.submitHintDesktop")}
         </motion.div>
       )}
     </motion.div>

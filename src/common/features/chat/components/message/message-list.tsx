@@ -1,7 +1,5 @@
 import { forwardRef } from "react";
 import { MessageListDesktop } from "./message-list-desktop";
-import { MessageListMobile } from "./message-list-mobile";
-import { useBreakpointContext } from "@/common/components/common/breakpoint-provider";
 import { MessageListRef } from "@/core/hooks/use-message-list";
 
 interface MessageListProps {
@@ -11,12 +9,6 @@ interface MessageListProps {
 
 export const MessageList = forwardRef<MessageListRef, MessageListProps>(
   function MessageList(props, ref) {
-    const { isMobile } = useBreakpointContext();
-
-    if (isMobile) {
-      return <MessageListMobile {...props} ref={ref} />;
-    }
-
     return <MessageListDesktop {...props} ref={ref} />;
   },
 );

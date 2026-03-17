@@ -163,11 +163,8 @@
       "description": "Let AI expert teams brainstorm and spark inspiration"
     },
     "initialInput": {
-      "placeholderMobile": "Describe the topic you want to explore, tap ✨ to start...",
       "placeholderDesktop": "Describe the topic you want to explore, press Enter to start...",
-      "hintMobile": "Enter topic, tap ✨ to start",
       "hintDesktop": "Press Enter to start, let AI expert teams answer for you",
-      "submitHintMobile": "Tap ✨ to submit",
       "submitHintDesktop": "Press Enter to submit ↵"
     }
   },
@@ -300,9 +297,6 @@
       "unknownError": "Unknown error",
       "refreshFailed": "Refresh failed"
     }
-  },
-  "mobile": {
-    "discussionSystem": "Discussion System"
   },
   "theme": {
     "switchToLight": "Switch to Light Mode",
